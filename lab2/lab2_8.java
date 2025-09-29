@@ -1,3 +1,5 @@
+package lab2;
+
 public class lab2_8 {
     public static void main(String[] args) {
         RegularPolygon p1 = new RegularPolygon();

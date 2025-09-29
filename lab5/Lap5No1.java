@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
-package lap5no1;
+package lab5;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-public class Lap5No1 {
+class Lap5No1 {
 
         public static void main(String[] args) {
         ArrayList<Integer> numbers = new ArrayList<>(

@@ -1,3 +1,5 @@
+package lab2;
+
 import java.util.Date;
 
 public class lab2_6 {

@@ -1,3 +1,5 @@
+package lab1;
+
 public class lab1_5{
     public static void main(String[] args) {
         char x = 'a';

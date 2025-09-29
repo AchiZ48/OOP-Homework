@@ -1,3 +1,5 @@
+package lab6;
+
 class Date {
     private int day;
     private int month;  // เปลี่ยนจาก String เป็น int
@@ -183,7 +185,7 @@ class FixAccount extends Account {
     }
 }
 
-public class Application {
+class Application {
     public static void main(String[] args) {
         Date openDate1 = new Date(5, 8, 2025);
         Date openDate2 = new Date(9, 2, 2000);
