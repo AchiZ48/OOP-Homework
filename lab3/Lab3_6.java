@@ -10,7 +10,7 @@ package lab3;
  */
 import java.util.Scanner;
 
-public class PalindromeChecker {
+public class Lab3_6 {
     public static boolean isPalindrome(String s) {
         s = s.toLowerCase().replaceAll("[^a-z0-9]", "");
         int left = 0, right = s.length() - 1;

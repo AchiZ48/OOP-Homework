@@ -1,6 +1,8 @@
+package lab4;
+
 import java.util.Scanner;
 
-public class car {
+public class Lab4_10 {
     private static final int MOVE_LEFT = 1;
     private static final int MOVE_RIGHT = 2;
     private static final int STAY = 3;

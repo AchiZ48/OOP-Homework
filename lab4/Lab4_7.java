@@ -1,7 +1,8 @@
+package lab4;
 
 import java.util.Scanner;
 
-public class mintwoset {
+public class Lab4_7 {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);

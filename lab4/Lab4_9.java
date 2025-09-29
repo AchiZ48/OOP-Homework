@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class consecutivefour {
+public class Lab4_9 {
     public static boolean IsConsecutiveFour(int[][] values) {
         int num_rows = values[0].length;
         int num_cols = values.length;

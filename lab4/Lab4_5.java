@@ -10,7 +10,7 @@ import java.util.Scanner;
  *
  * @author studentcs
  */
-public class MatrixMultiplication {
+public class Lab4_5 {
     public static int[][] multiply(int[][] A, int[][] B) {
         int n = A.length;
         int l = A[0].length;

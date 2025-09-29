@@ -13,11 +13,11 @@ import java.util.Scanner;
  */
 
 
-public class AscendSortFreq {
+public class Lab4_4 {
     double[] A;
 
     // Constructor
-    public AscendSortFreq(double[] A) {
+    public Lab4_4(double[] A) {
         this.A = A;
     }
 
@@ -73,7 +73,7 @@ public class AscendSortFreq {
         for (int i = 0; i < size; i++) {
                 input[i] = sc.nextInt();
     }
-        AscendSortFreq obj = new AscendSortFreq(input);
+        Lab4_4 obj = new Lab4_4(input);
         double[] sorted = obj.AscendSort(input);
         obj.SortCommuFreq(sorted);
     }

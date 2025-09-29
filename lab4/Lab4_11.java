@@ -1,6 +1,8 @@
+package lab4;
+
 import java.util.Scanner;
 
-public class oildeposit {
+public class Lab4_11 {
     private static final int[] DR = {-1, -1, -1, 0, 0, 1, 1, 1};
     private static final int[] DC = {-1, 0, 1, -1, 1, -1, 0, 1};
 

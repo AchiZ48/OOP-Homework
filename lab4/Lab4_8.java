@@ -1,6 +1,8 @@
+package lab4;
+
 import java.util.Scanner;
 
-public class findpokemon {
+public class Lab4_8 {
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
 

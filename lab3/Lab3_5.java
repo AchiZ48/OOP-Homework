@@ -30,7 +30,7 @@ class RoachPopulation {
     }
 }
 
-public class TestRoach {
+public class Lab3_5 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int initial = sc.nextInt();

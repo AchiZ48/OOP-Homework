@@ -10,7 +10,7 @@ package lab3;
  */
 import java.util.Scanner;
 
-public class EstimatePI {
+public class Lab3_8 {
     public static double m(int i) {
         double sum = 0;
         for (int k = 0; k < i; k++) {
