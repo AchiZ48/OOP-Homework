@@ -1,66 +1,167 @@
 package lab11;
 
+import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-import java.time.*;
+import java.util.*;
+import javax.swing.Timer;
 
 public class ClockAnimation_Thread extends JFrame {
+    private StillClock[] clocks = new StillClock[3];
+
     public ClockAnimation_Thread() {
-        setTitle("Clock (Thread)");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(360, 360);
-        setLocationRelativeTo(null);
-        add(new ClockPanel());
+        JPanel panel = new JPanel(new GridLayout(1, 3));
+       
+        clocks[0] = new StillClock(TimeZone.getTimeZone("Asia/Bangkok"), "Thailand");
+        clocks[1] = new StillClock(TimeZone.getTimeZone("Europe/London"), "England");
+        clocks[2] = new StillClock(TimeZone.getTimeZone("Asia/Tokyo"), "Japan");
+       
+        for (StillClock clock : clocks) {
+            panel.add(clock);
+        }
+        add(panel);
+
+        new Thread(new ClockUpdater()).start();
     }
-    public static void main(String[] args){ SwingUtilities.invokeLater(() -> new ClockAnimation_Thread().setVisible(true)); }
+
+    private class ClockUpdater implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                for (StillClock clock : clocks) {
+                    clock.setCurrentTime();
+                    clock.repaint();
+                }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new ClockAnimation_Thread();
+        frame.setTitle("ClockAnimation_Thread");
+        frame.setSize(600, 220);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 }
 
-class ClockPanel extends JPanel implements Runnable {
-    private final Thread loop;
-    private volatile boolean running = true;
-    public ClockPanel() {
-        loop = new Thread(this, "ClockLoop");
-        loop.setDaemon(true);
-        loop.start();
+class StillClock extends JPanel {
+    private int hour;
+    private int minute;
+    private int second;
+    private TimeZone timeZone;
+    private String countryName;
+
+    public StillClock() {
+        this(TimeZone.getDefault(), "Default");
     }
-    public void run() {
-        try {
-            while (running) {
-                SwingUtilities.invokeLater(this::repaint);
-                Thread.sleep(40);
-            }
-        } catch (InterruptedException ignored) {}
+
+    public StillClock(TimeZone tz, String country) {
+        this.timeZone = tz;
+        this.countryName = country;
+        setCurrentTime();
     }
+
+    public StillClock(int hour, int minute, int second) {
+        this.hour = hour;
+        this.minute = minute;
+        this.second = second;
+        this.timeZone = TimeZone.getDefault();
+        this.countryName = "Default";
+    }
+
+    public StillClock(int hour, int minute, int second, TimeZone tz) {
+        this.hour = hour;
+        this.minute = minute;
+        this.second = second;
+        this.timeZone = tz;
+        this.countryName = "Default";
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+        repaint();
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+        repaint();
+    }
+
+    public int getSecond() {
+        return second;
+    }
+
+    public void setSecond(int second) {
+        this.second = second;
+        repaint();
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int w=getWidth(), h=getHeight(), r=Math.min(w,h)/2-10, cx=w/2, cy=h/2;
-        g.setColor(Color.WHITE); g.fillRect(0,0,w,h);
-        g.setColor(Color.BLACK); g.drawOval(cx-r, cy-r, 2*r, 2*r);
-        for(int i=0;i<60;i++){
-            double a=Math.toRadians(i*6);
-            int r1=r-8, r2= r-2;
-            if(i%5==0){ r1=r-16; }
-            int x1=cx+(int)(r1*Math.sin(a)), y1=cy-(int)(r1*Math.cos(a));
-            int x2=cx+(int)(r2*Math.sin(a)), y2=cy-(int)(r2*Math.cos(a));
-            g.drawLine(x1,y1,x2,y2);
-        }
-        LocalTime t=LocalTime.now();
-        double sAng=Math.toRadians(t.getSecond()*6 + t.getNano()/1_000_000_000.0*6);
-        double mAng=Math.toRadians(t.getMinute()*6 + t.getSecond()/60.0*6);
-        double hAng=Math.toRadians((t.getHour()%12)*30 + t.getMinute()/60.0*30);
-        drawHand(g, cx, cy, hAng, (int)(r*0.5), 6, new Color(20,20,20));
-        drawHand(g, cx, cy, mAng, (int)(r*0.75), 4, new Color(50,50,50));
-        drawHand(g, cx, cy, sAng, (int)(r*0.85), 2, Color.RED);
-        g.fillOval(cx-4, cy-4, 8, 8);
+
+        int clockRadius = (int)(Math.min(getWidth(), getHeight() - 40) * 0.8 * 0.5);
+        int xCenter = getWidth() / 2;
+        int yCenter = (getHeight() - 40) / 2;
+
+        g.setColor(Color.black);
+        g.drawOval(xCenter - clockRadius, yCenter - clockRadius,
+                   2 * clockRadius, 2 * clockRadius);
+        g.drawString("12", xCenter - 5, yCenter - clockRadius + 12);
+        g.drawString("9", xCenter - clockRadius + 3, yCenter + 5);
+        g.drawString("3", xCenter + clockRadius - 10, yCenter + 3);
+        g.drawString("6", xCenter - 3, yCenter + clockRadius - 3);
+
+        int sLength = (int)(clockRadius * 0.8);
+        int xSecond = (int)(xCenter + sLength * Math.sin(second * (2 * Math.PI / 60)));
+        int ySecond = (int)(yCenter - sLength * Math.cos(second * (2 * Math.PI / 60)));
+        g.setColor(Color.red);
+        g.drawLine(xCenter, yCenter, xSecond, ySecond);
+
+        int mLength = (int)(clockRadius * 0.65);
+        int xMinute = (int)(xCenter + mLength * Math.sin(minute * (2 * Math.PI / 60)));
+        int yMinute = (int)(yCenter - mLength * Math.cos(minute * (2 * Math.PI / 60)));
+        g.setColor(Color.blue);
+        g.drawLine(xCenter, yCenter, xMinute, yMinute);
+
+        int hLength = (int)(clockRadius * 0.5);
+        int xHour = (int)(xCenter + hLength * Math.sin((hour % 12 + minute / 60.0) * (2 * Math.PI / 12)));
+        int yHour = (int)(yCenter - hLength * Math.cos((hour % 12 + minute / 60.0) * (2 * Math.PI / 12)));
+        g.setColor(Color.green);
+        g.drawLine(xCenter, yCenter, xHour, yHour);
+
+        g.setColor(Color.black);
+        g.setFont(new Font("Arial", Font.BOLD, 12));
+        int nameY = yCenter + clockRadius + 25;
+        int nameWidth = g.getFontMetrics().stringWidth(countryName);
+        g.drawString(countryName, xCenter - (nameWidth / 2), nameY);
     }
-    private void drawHand(Graphics g,int cx,int cy,double ang,int len,int th,Color c){
-        Graphics2D g2=(Graphics2D)g;
-        Stroke old=g2.getStroke();
-        g2.setStroke(new BasicStroke(th, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2.setColor(c);
-        int x=cx+(int)(len*Math.sin(ang)), y=cy-(int)(len*Math.cos(ang));
-        g2.drawLine(cx,cy,x,y);
-        g2.setStroke(old);
+
+    public void setCurrentTime() {
+        Calendar calendar = new GregorianCalendar(timeZone);
+        this.hour = calendar.get(Calendar.HOUR_OF_DAY);
+        this.minute = calendar.get(Calendar.MINUTE);
+        this.second = calendar.get(Calendar.SECOND);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(200, 220);
     }
 }
-
